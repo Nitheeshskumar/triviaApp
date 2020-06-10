@@ -1,6 +1,7 @@
 const express = require('express')
 const router = express.Router()
 const Question = require('./models/Question')
+const User = require('./models/Users')
 module.exports = router
 
 // create one quiz question
@@ -11,7 +12,8 @@ router.post('/questions', async (req, res) => {
 
         const question = await Question.create({
             description,
-            alternatives
+            alternatives,
+            type:'question'
         })
 
         return res.status(201).json(question)
@@ -22,7 +24,7 @@ router.post('/questions', async (req, res) => {
 // get all quiz questions
 router.get('/questions', async (req, res) => {
     try {
-        const questions = await Question.find()
+        const questions = await Question.find({type:'question'})
         return res.status(200).json(questions)
     } catch (error) {
         return res.status(500).json({"error":error})
@@ -64,6 +66,31 @@ router.put('/questions/:id', async (req, res) => {
             question.alternatives = alternatives
             await question.save()
             return res.status(200).json(question)
+        }
+    } catch (error) {
+        return res.status(500).json({"error":error})
+    }
+})
+
+
+// update score or create user
+router.put('/user', async (req, res) => {
+    try {
+
+        const { name,email,attempts,score } = req.body
+
+        let user = await User.findOne({email})
+
+        if(!user){
+            user = await User.create({
+                name,email
+            })
+            return res.status(201).json(user)
+        }else{
+            user.attempts = attempts
+            user.score = score
+            await user.save()
+            return res.status(200).json(user)
         }
     } catch (error) {
         return res.status(500).json({"error":error})

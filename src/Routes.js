@@ -87,8 +87,8 @@ router.put('/user', async (req, res) => {
             })
             return res.status(201).json(user)
         }else{
-            user.attempts = attempts
-            user.score = score
+            if(attempts){user.attempts = attempts;}
+            if(score){user.score = score}
             await user.save()
             return res.status(200).json(user)
         }

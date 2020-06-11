@@ -7,12 +7,12 @@ module.exports = router
 // create one quiz question
 router.post('/questions', async (req, res) => {
     try {
-        const { description } = req.body
-        const { alternatives } = req.body
+        const { description ,alternatives,correct} = req.body
 
         const question = await Question.create({
             description,
             alternatives,
+            correct,
             type:'question'
         })
 

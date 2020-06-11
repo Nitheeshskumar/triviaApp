@@ -97,6 +97,14 @@ router.put('/user', async (req, res) => {
     }
 })
 
+router.get('/dashboard', async (req, res) => {
+    try {
+        const user = await User.find({type:'user'})
+        return res.status(200).json(user)
+    } catch (error) {
+        return res.status(500).json({"error":error})
+    }
+})
 // delete one quiz question
 router.delete('/questions/:id', async (req, res) => {
     try {
